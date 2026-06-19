@@ -12,9 +12,11 @@
 
         <h1>📚 StudyFlow</h1>
         <p>Smart Study & Productivity Tracker</p>
-<button onclick="toggleTheme()">🌙 Toggle Dark Mode</button>
+
+        <button onclick="toggleTheme()">🌙 Toggle Dark Mode</button>
+
         <div class="card">
-            <h2>Add Task</h2>
+            <h2>📝 Add Task</h2>
 
             <input type="text" id="taskInput" placeholder="Enter task">
             <button onclick="addTask()">Add</button>
@@ -30,14 +32,27 @@
 
             <p id="goalDisplay"></p>
         </div>
-        <div class="card">
-    <h2>📊 Progress Dashboard</h2>
 
-    <p>Total Tasks: <span id="totalTasks">0</span></p>
-    <p>Completed Tasks: <span id="completedTasks">0</span></p>
-    <p>Pending Tasks: <span id="pendingTasks">0</span></p>
-    <p>Completion Rate: <span id="completionRate">0</span>%</p>
-</div>
+        <div class="card">
+            <h2>📊 Progress Dashboard</h2>
+
+            <p>Total Tasks: <span id="totalTasks">0</span></p>
+            <p>Completed Tasks: <span id="completedTasks">0</span></p>
+            <p>Pending Tasks: <span id="pendingTasks">0</span></p>
+            <p>Completion Rate: <span id="completionRate">0</span>%</p>
+        </div>
+
+        <div class="card">
+            <h2>📈 Productivity Analytics</h2>
+
+            <canvas id="progressChart"></canvas>
+
+            <h3 style="margin-top:20px;">
+                Focus Score:
+                <span id="focusScore">0</span>/100
+            </h3>
+        </div>
+
         <div class="card">
             <h2>⏳ Pomodoro Timer</h2>
 
@@ -54,6 +69,7 @@
 
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 
 </body>

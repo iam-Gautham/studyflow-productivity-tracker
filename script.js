@@ -34,6 +34,7 @@ function renderTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 
     updateDashboard();
+updateChart();
 }
 
 function addTask() {
@@ -212,3 +213,70 @@ if (localStorage.getItem("theme") === "dark") {
 
 renderTasks();
 updateDashboard();
+let chart;
+
+// ======================
+// PRODUCTIVITY CHART
+// ======================
+
+let chart;
+
+function updateChart() {
+
+    const canvas =
+        document.getElementById("progressChart");
+
+    if (!canvas) return;
+
+    const completed =
+        tasks.filter(task => task.completed).length;
+
+    const pending =
+        tasks.length - completed;
+
+    if (chart) {
+        chart.destroy();
+    }
+
+    chart = new Chart(canvas, {
+        type: "doughnut",
+        data: {
+            labels: ["Completed", "Pending"],
+            datasets: [{
+                data: [completed, pending]
+            }]
+        }
+    });
+
+    updateFocusScore();
+}
+
+function updateFocusScore() {
+
+    const completed =
+        tasks.filter(task => task.completed).length;
+
+    const total = tasks.length;
+
+    const completionRate =
+        total === 0
+            ? 0
+            : Math.round((completed / total) * 100);
+
+    const streak =
+        parseInt(localStorage.getItem("streak")) || 0;
+
+    let score =
+        completionRate + (streak * 5);
+
+    if (score > 100) {
+        score = 100;
+    }
+
+    const scoreElement =
+        document.getElementById("focusScore");
+
+    if (scoreElement) {
+        scoreElement.innerText = score;
+    }
+}
