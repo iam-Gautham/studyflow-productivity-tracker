@@ -1,16 +1,28 @@
+// ======================
+// TASK MANAGEMENT
+// ======================
+
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 function renderTasks() {
+
     const taskList = document.getElementById("taskList");
 
     taskList.innerHTML = "";
 
-    tasks.forEach((task,index)=>{
+    tasks.forEach((task, index) => {
 
-        const li=document.createElement("li");
+        const li = document.createElement("li");
 
-        li.innerHTML=`
-            ${task}
+        li.className = task.completed ? "completed" : "";
+
+        li.innerHTML = `
+            ${task.name}
+
+            <button onclick="completeTask(${index})">
+                ✔
+            </button>
+
             <button onclick="deleteTask(${index})">
                 Delete
             </button>
@@ -19,66 +31,116 @@ function renderTasks() {
         taskList.appendChild(li);
     });
 
-    localStorage.setItem("tasks",JSON.stringify(tasks));
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    updateDashboard();
 }
 
-function addTask(){
+function addTask() {
 
-    const input=document.getElementById("taskInput");
+    const input = document.getElementById("taskInput");
 
-    if(input.value.trim()!==""){
+    if (input.value.trim() !== "") {
 
-        tasks.push(input.value);
+        tasks.push({
+            name: input.value,
+            completed: false
+        });
 
-        input.value="";
+        input.value = "";
 
         renderTasks();
     }
 }
 
-function deleteTask(index){
+function completeTask(index) {
 
-    tasks.splice(index,1);
+    tasks[index].completed = !tasks[index].completed;
 
     renderTasks();
 }
 
-renderTasks();
+function deleteTask(index) {
 
-function saveGoal(){
+    tasks.splice(index, 1);
 
-    const goal=document.getElementById("goalInput").value;
-
-    localStorage.setItem("goal",goal);
-
-    document.getElementById("goalDisplay").innerText=
-        "Daily Goal: "+goal+" hours";
+    renderTasks();
 }
 
-const savedGoal=localStorage.getItem("goal");
+// ======================
+// DASHBOARD
+// ======================
 
-if(savedGoal){
+function updateDashboard() {
 
-    document.getElementById("goalDisplay").innerText=
-        "Daily Goal: "+savedGoal+" hours";
+    const total = tasks.length;
+
+    const completed =
+        tasks.filter(task => task.completed).length;
+
+    const pending = total - completed;
+
+    const rate =
+        total === 0
+            ? 0
+            : Math.round((completed / total) * 100);
+
+    document.getElementById("totalTasks").innerText =
+        total;
+
+    document.getElementById("completedTasks").innerText =
+        completed;
+
+    document.getElementById("pendingTasks").innerText =
+        pending;
+
+    document.getElementById("completionRate").innerText =
+        rate;
 }
 
-let time=1500;
+// ======================
+// DAILY GOAL
+// ======================
+
+function saveGoal() {
+
+    const goal =
+        document.getElementById("goalInput").value;
+
+    localStorage.setItem("goal", goal);
+
+    document.getElementById("goalDisplay").innerText =
+        "Daily Goal: " + goal + " hours";
+}
+
+const savedGoal = localStorage.getItem("goal");
+
+if (savedGoal) {
+
+    document.getElementById("goalDisplay").innerText =
+        "Daily Goal: " + savedGoal + " hours";
+}
+
+// ======================
+// POMODORO TIMER
+// ======================
+
+let time = 1500;
 let interval;
 
-function startTimer(){
+function startTimer() {
 
     clearInterval(interval);
 
-    interval=setInterval(()=>{
+    interval = setInterval(() => {
 
-        let minutes=Math.floor(time/60);
-        let seconds=time%60;
+        let minutes = Math.floor(time / 60);
+        let seconds = time % 60;
 
-        document.getElementById("timer").innerText=
-        `${minutes}:${seconds<10?'0':''}${seconds}`;
+        document.getElementById("timer").innerText =
+            `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 
-        if(time<=0){
+        if (time <= 0) {
 
             clearInterval(interval);
 
@@ -89,29 +151,64 @@ function startTimer(){
 
         time--;
 
-    },1000);
+    }, 1000);
 }
 
-function resetTimer(){
+function resetTimer() {
 
     clearInterval(interval);
 
-    time=1500;
+    time = 1500;
 
-    document.getElementById("timer").innerText="25:00";
+    document.getElementById("timer").innerText =
+        "25:00";
 }
 
-function increaseStreak(){
+// ======================
+// STUDY STREAK
+// ======================
 
-    let streak=localStorage.getItem("streak") || 0;
+function increaseStreak() {
+
+    let streak =
+        parseInt(localStorage.getItem("streak")) || 0;
 
     streak++;
 
-    localStorage.setItem("streak",streak);
+    localStorage.setItem("streak", streak);
 
-    document.getElementById("streak").innerText=
-    streak+" Days";
+    document.getElementById("streak").innerText =
+        streak + " Days";
 }
 
-document.getElementById("streak").innerText=
-(localStorage.getItem("streak") || 0)+" Days";
+document.getElementById("streak").innerText =
+    (localStorage.getItem("streak") || 0) + " Days";
+
+// ======================
+// DARK MODE
+// ======================
+
+function toggleTheme() {
+
+    document.body.classList.toggle("dark-mode");
+
+    if (
+        document.body.classList.contains("dark-mode")
+    ) {
+        localStorage.setItem("theme", "dark");
+    }
+    else {
+        localStorage.setItem("theme", "light");
+    }
+}
+
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+}
+
+// ======================
+// INITIAL LOAD
+// ======================
+
+renderTasks();
+updateDashboard();
