@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyFlow</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>📚 StudyFlow</h1>
+        <p>Smart Study & Productivity Tracker</p>
+
+        <div class="card">
+            <h2>Add Task</h2>
+
+            <input type="text" id="taskInput" placeholder="Enter task">
+            <button onclick="addTask()">Add</button>
+
+            <ul id="taskList"></ul>
+        </div>
+
+        <div class="card">
+            <h2>🎯 Daily Goal</h2>
+
+            <input type="number" id="goalInput" placeholder="Hours">
+            <button onclick="saveGoal()">Save Goal</button>
+
+            <p id="goalDisplay"></p>
+        </div>
+
+        <div class="card">
+            <h2>⏳ Pomodoro Timer</h2>
+
+            <div id="timer">25:00</div>
+
+            <button onclick="startTimer()">Start</button>
+            <button onclick="resetTimer()">Reset</button>
+        </div>
+
+        <div class="card">
+            <h2>🔥 Study Streak</h2>
+            <p id="streak">0 Days</p>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
