@@ -1,12 +1,21 @@
 // ======================
-// TASK MANAGEMENT
+// TASK DATA
 // ======================
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let time = 1500;
+let interval;
+let chart;
+
+// ======================
+// TASK MANAGEMENT
+// ======================
 
 function renderTasks() {
 
     const taskList = document.getElementById("taskList");
+
+    if (!taskList) return;
 
     taskList.innerHTML = "";
 
@@ -18,14 +27,8 @@ function renderTasks() {
 
         li.innerHTML = `
             ${task.name}
-
-            <button onclick="completeTask(${index})">
-                ✔
-            </button>
-
-            <button onclick="deleteTask(${index})">
-                Delete
-            </button>
+            <button onclick="completeTask(${index})">✔</button>
+            <button onclick="deleteTask(${index})">Delete</button>
         `;
 
         taskList.appendChild(li);
@@ -34,12 +37,14 @@ function renderTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 
     updateDashboard();
-updateChart();
+    updateChart();
 }
 
 function addTask() {
 
     const input = document.getElementById("taskInput");
+
+    if (!input) return;
 
     if (input.value.trim() !== "") {
 
@@ -86,17 +91,10 @@ function updateDashboard() {
             ? 0
             : Math.round((completed / total) * 100);
 
-    document.getElementById("totalTasks").innerText =
-        total;
-
-    document.getElementById("completedTasks").innerText =
-        completed;
-
-    document.getElementById("pendingTasks").innerText =
-        pending;
-
-    document.getElementById("completionRate").innerText =
-        rate;
+    document.getElementById("totalTasks").innerText = total;
+    document.getElementById("completedTasks").innerText = completed;
+    document.getElementById("pendingTasks").innerText = pending;
+    document.getElementById("completionRate").innerText = rate;
 }
 
 // ======================
@@ -114,20 +112,21 @@ function saveGoal() {
         "Daily Goal: " + goal + " hours";
 }
 
-const savedGoal = localStorage.getItem("goal");
+function loadGoal() {
 
-if (savedGoal) {
+    const savedGoal =
+        localStorage.getItem("goal");
 
-    document.getElementById("goalDisplay").innerText =
-        "Daily Goal: " + savedGoal + " hours";
+    if (savedGoal) {
+
+        document.getElementById("goalDisplay").innerText =
+            "Daily Goal: " + savedGoal + " hours";
+    }
 }
 
 // ======================
 // POMODORO TIMER
 // ======================
-
-let time = 1500;
-let interval;
 
 function startTimer() {
 
@@ -180,10 +179,16 @@ function increaseStreak() {
 
     document.getElementById("streak").innerText =
         streak + " Days";
+
+    updateFocusScore();
 }
 
-document.getElementById("streak").innerText =
-    (localStorage.getItem("streak") || 0) + " Days";
+function loadStreak() {
+
+    document.getElementById("streak").innerText =
+        (localStorage.getItem("streak") || 0) +
+        " Days";
+}
 
 // ======================
 // DARK MODE
@@ -193,9 +198,7 @@ function toggleTheme() {
 
     document.body.classList.toggle("dark-mode");
 
-    if (
-        document.body.classList.contains("dark-mode")
-    ) {
+    if (document.body.classList.contains("dark-mode")) {
         localStorage.setItem("theme", "dark");
     }
     else {
@@ -203,23 +206,16 @@ function toggleTheme() {
     }
 }
 
-if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark-mode");
+function loadTheme() {
+
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+    }
 }
 
 // ======================
-// INITIAL LOAD
+// CHART
 // ======================
-
-renderTasks();
-updateDashboard();
-let chart;
-
-// ======================
-// PRODUCTIVITY CHART
-// ======================
-
-let chart;
 
 function updateChart() {
 
@@ -251,6 +247,10 @@ function updateChart() {
     updateFocusScore();
 }
 
+// ======================
+// FOCUS SCORE
+// ======================
+
 function updateFocusScore() {
 
     const completed =
@@ -273,10 +273,19 @@ function updateFocusScore() {
         score = 100;
     }
 
-    const scoreElement =
-        document.getElementById("focusScore");
-
-    if (scoreElement) {
-        scoreElement.innerText = score;
-    }
+    document.getElementById("focusScore").innerText =
+        score;
 }
+
+// ======================
+// INITIAL LOAD
+// ======================
+
+loadGoal();
+loadStreak();
+loadTheme();
+
+renderTasks();
+updateDashboard();
+updateChart();
+updateFocusScore();
