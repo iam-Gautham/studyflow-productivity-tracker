@@ -25,10 +25,20 @@ h1{
 
 p{
     text-align:center;
-    color:white;
+    
     margin-bottom:20px;
 }
+.container > p{
+    color:white;
+}
 
+.card p{
+    color:black;
+}
+
+.dark-mode .card p{
+    color:white;
+}
 .card{
     background:white;
     padding:20px;

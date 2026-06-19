@@ -18,6 +18,16 @@ function renderTasks() {
     if (!taskList) return;
 
     taskList.innerHTML = "";
+    if(tasks.length === 0){
+
+    taskList.innerHTML =
+        "<li>No tasks added yet.</li>";
+
+    updateDashboard();
+    updateChart();
+
+    return;
+}
 
     tasks.forEach((task, index) => {
 
@@ -239,8 +249,12 @@ function updateChart() {
         data: {
             labels: ["Completed", "Pending"],
             datasets: [{
-                data: [completed, pending]
-            }]
+    data: [completed, pending],
+    backgroundColor: [
+        "#4CAF50",
+        "#FF6B6B"
+    ]
+}]
         }
     });
 
@@ -267,7 +281,10 @@ function updateFocusScore() {
         parseInt(localStorage.getItem("streak")) || 0;
 
     let score =
-        completionRate + (streak * 5);
+    Math.round(
+        (completionRate * 0.8) +
+        (streak * 2)
+    );
 
     if (score > 100) {
         score = 100;
